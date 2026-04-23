@@ -1,42 +1,85 @@
-#root{
-  background-image: url('./assets/bg.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: top;
+#root {
+    background-image:
+        radial-gradient(ellipse at 15% 10%, rgba(12, 218, 196, 0.18), transparent 55%),
+        radial-gradient(ellipse at 85% 20%, rgba(245, 197, 24, 0.18), transparent 55%),
+        radial-gradient(ellipse at 50% 100%, rgba(57, 93, 240, 0.22), transparent 60%),
+        url('./assets/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    background-color: #0b1020;
+    min-height: 100vh;
 }
+
 .App {
-  flex-direction: column;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    color: #F5F6FB;
+    padding: 48px 16px;
+    box-sizing: border-box;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.brand-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    filter: drop-shadow(0 10px 30px rgba(245, 197, 24, 0.45));
+    margin-bottom: 14px;
+}
+
+.brand-title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: linear-gradient(96.02deg, #0CDAC4 0.22%, #395DF0 31.45%, #F5C518 71.02%, #FF845A 104.34%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.brand-tagline {
+    margin: 2px 0 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(245, 246, 251, 0.55);
 }
 
 #love {
-  color: #fff;
-  width: 200px;
-  bottom: 24px;
-  margin: 100px auto;
-  display: flex;
-  text-transform: uppercase;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-  font-size: 14px;
-  text-transform: capitalize;
-  filter: drop-shadow(2px 4px 6px black);
+    margin-top: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(245, 246, 251, 0.55);
+    text-transform: capitalize;
 }
-  #love  a{
-      text-decoration: none;
-  }
-  #love  span#logo {
-      display: block;
-      background: linear-gradient(96.02deg, #0CDAC4 0.22%, #395DF0 31.45%, #FD49AD 71.02%, #FF845A 104.34%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      --WebkitTextFillColor: transparent;
-  }
-  #love  img{
-      width: 40px;
-  }
+
+#love a {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#love span#logo {
+    font-weight: 700;
+    background: linear-gradient(96.02deg, #0CDAC4 0.22%, #395DF0 31.45%, #F5C518 71.02%, #FF845A 104.34%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

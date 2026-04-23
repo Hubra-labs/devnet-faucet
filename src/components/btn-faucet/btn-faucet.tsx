@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { keypairIdentity, Metaplex } from "@metaplex-foundation/js";
 import { BlockheightBasedTransactionConfirmationStrategy, Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction } from '@solana/web3.js';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Stack } from '@mui/material';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createTransferCheckedInstruction, createInitializeMintInstruction, createMint, getOrCreateAssociatedTokenAccount, createTransferInstruction, getAssociatedTokenAddress, createInitializeAccountInstruction, getMinimumBalanceForRentExemptAccount, ACCOUNT_SIZE, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction } from '@solana/spl-token';
 
 import Plausible from 'plausible-tracker'
@@ -29,26 +29,25 @@ const BtnFaucet: FC<BtnFaucetProps> = ({ walletAddress, connection, setAlertConf
         console.log(confim)
     }
     const requestAirdrop = async (address: string) => {
-        try {
-            const signature = await connection.requestAirdrop(
-                new PublicKey(address),
-                LAMPORTS_PER_SOL
-            );
+        const signature = await connection.requestAirdrop(
+            new PublicKey(address),
+            LAMPORTS_PER_SOL
+        );
 
-            await confirmAndFinalize(signature);
-        } catch (error) {
-            setLoader(false);
-            console.error(error)
-        }
+        await confirmAndFinalize(signature);
     }
     const handleAirdrop = async () => {
         setLoader(true)
         trackEvent('airdrop sol')
-        await requestAirdrop(walletAddress)
-        setAlertConfig({ open: true, message: 'Airdrop sol to account' });
-
-        setLoader(false)
-
+        try {
+            await requestAirdrop(walletAddress)
+            setAlertConfig({ open: true, message: 'Airdrop sol to account', severity: 'success' });
+        } catch (error) {
+            console.error(error)
+            setAlertConfig({ open: true, message: 'Airdrop failed', severity: 'error' });
+        } finally {
+            setLoader(false)
+        }
     }
     const createDemoAccount = () => {
         const keypair = Keypair.generate();
@@ -61,9 +60,9 @@ const BtnFaucet: FC<BtnFaucetProps> = ({ walletAddress, connection, setAlertConf
             // create middleware account
             const feePayer = createDemoAccount()
             // airdrop this account
-            setAlertConfig({ open: true, message: 'Airdrop sol to fee payer account' });
+            setAlertConfig({ open: true, message: 'Airdrop sol to fee payer account', severity: 'success' });
             await requestAirdrop(feePayer.publicKey.toBase58())
-            setAlertConfig({ open: true, message: 'Creating NFT' });
+            setAlertConfig({ open: true, message: 'Creating NFT', severity: 'success' });
 
             // init metaplex instance
             const mx = new Metaplex(connection);
@@ -78,11 +77,12 @@ const BtnFaucet: FC<BtnFaucetProps> = ({ walletAddress, connection, setAlertConf
                     sellerFeeBasisPoints: 500, // Represents 5.00%.
                 })
             console.log(nft)
-            setAlertConfig({ open: true, message: 'Airdrop NFT to account' });
+            setAlertConfig({ open: true, message: 'Airdrop NFT to account', severity: 'success' });
             setLoader(false)
         } catch (error) {
             setLoader(false);
             console.error(error)
+            setAlertConfig({ open: true, message: 'NFT airdrop failed', severity: 'error' });
         }
 
     }
@@ -173,23 +173,40 @@ const BtnFaucet: FC<BtnFaucetProps> = ({ walletAddress, connection, setAlertConf
             const rawTransaction = transaction.serialize({ requireAllSignatures: false });
             const signature = await connection.sendRawTransaction(rawTransaction);
             await confirmAndFinalize(signature);
-            setAlertConfig({ open: true, message: 'Airdrop SPL to account' });
+            setAlertConfig({ open: true, message: 'Airdrop SPL to account', severity: 'success' });
             setLoader(false)
         } catch (error) {
             setLoader(false);
             console.error(error)
+            setAlertConfig({ open: true, message: 'SPL airdrop failed', severity: 'error' });
         }
     }
     return (
-        <>
-            <Box style={{ display: 'flex', justifyContent: 'space-between' }} sx={{ m: 4, p: 2, border: '1px dashed grey' }}>
-                <Button onClick={handleAirdrop} disabled={!isValid} color={'success'} variant="contained">Get 1 SOL</Button>
-                <Button onClick={requestNft} disabled={!isValid} color={'secondary'} variant="contained">Get 1 NFT</Button>
-                {/* <Button onClick={mintSPL} disabled={!isValid} color={'primary'} variant="contained">Mint & get SPL</Button> */}
-            </Box>
-            {loader && <CircularProgress color="secondary" style={{ display: 'flex', margin: '0 auto' }} />}
-
-        </>
+        <Stack spacing={2} alignItems="center">
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: '100%' }}>
+                <Button
+                    onClick={handleAirdrop}
+                    disabled={!isValid || loader}
+                    color="primary"
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                >
+                    Get 1 SOL
+                </Button>
+                <Button
+                    onClick={requestNft}
+                    disabled={!isValid || loader}
+                    color="secondary"
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                >
+                    Get 1 NFT
+                </Button>
+            </Stack>
+            {loader && <CircularProgress color="primary" size={28} thickness={4} />}
+        </Stack>
     )
 }
 
