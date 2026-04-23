@@ -114,72 +114,7 @@ const BtnFaucet: FC<BtnFaucetProps> = ({ walletAddress, connection, setAlertConf
 
         return { tx, mint };
     }
-    const mintSPL = async () => {
-        try {
-
-            setLoader(true)
-            track('airdrop spl')
-            const feePayer = createDemoAccount()
-
-            // G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY
-            const toWallet = new PublicKey(walletAddress)
-            const mintIns = await mint(feePayer, toWallet);
-            const mintPubkey = new PublicKey("AjMpnWhqrbFPJTQps4wEPNnGuQPMKUcfqHUqAeEf1WM4");
-
-
-
-
-            let tokenAccount = Keypair.generate();
-            console.log(`ramdom token address: ${tokenAccount.publicKey.toBase58()}`);
-
-            const { lastValidBlockHeight, blockhash } = await connection.getLatestBlockhash();
-            const txArgs: TransactionBlockhashCtor = { feePayer: feePayer.publicKey, blockhash, lastValidBlockHeight: lastValidBlockHeight }
-
-
-
-
-
-            // create account
-            const ataIns = SystemProgram.createAccount({
-                fromPubkey: feePayer.publicKey,
-                newAccountPubkey: tokenAccount.publicKey,
-                space: ACCOUNT_SIZE,
-                lamports: await getMinimumBalanceForRentExemptAccount(connection),
-                programId: TOKEN_PROGRAM_ID,
-            })
-            // init token account
-            const initAtaIns = createInitializeAccountInstruction(tokenAccount.publicKey, mintPubkey, feePayer.publicKey)
-
-
-
-            let ata = await getAssociatedTokenAddress(
-                mintPubkey, // mint
-                feePayer.publicKey, // owner
-                false // allow owner off curve
-            );
-            console.log(`ata: ${ata.toBase58()}`);
-
-            const cata =
-                createAssociatedTokenAccountInstruction(
-                    feePayer.publicKey, // payer
-                    ata, // ata
-                    toWallet, // owner
-                    mintPubkey // mint
-
-                );
-
-            const ins = [mintIns.tx, ataIns, cata]
-            let transaction = new Transaction(txArgs).add(...ins);
-            const rawTransaction = transaction.serialize({ requireAllSignatures: false });
-            const signature = await connection.sendRawTransaction(rawTransaction);
-            await confirmAndFinalize(signature);
-            setAlertConfig({ open: true, message: 'Airdrop SPL to account' });
-            setLoader(false)
-        } catch (error) {
-            setLoader(false);
-            console.error(error)
-        }
-    }
+ 
     return (
         <>
             <Box style={{ display: 'flex', justifyContent: 'space-between' }} sx={{ m: 4, p: 2, border: '1px dashed grey' }}>
