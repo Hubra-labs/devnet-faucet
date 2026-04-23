@@ -21,7 +21,7 @@ const WalletInput: FC<WalletInputProps> = ({ address, setAddress, setIsValid, is
 
     useEffect(() => {
         if (address) setIsValid(validateSolanaAddress(address));
-    }, [address]);
+    }, [address, setIsValid]);
 
     const hasError = !!address && isValid === false;
 

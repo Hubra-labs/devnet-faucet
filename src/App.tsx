@@ -1,6 +1,6 @@
 import { Alert, AlertColor, Container, Paper, Snackbar, Stack } from '@mui/material';
 
-import { clusterApiUrl, Connection } from '@solana/web3.js';
+import { Connection } from '@solana/web3.js';
 import { FC, useState } from 'react';
 import BtnFaucet from './components/btn-faucet/btn-faucet';
 import WalletInput from './components/wallet-input/wallet-input';
@@ -52,7 +52,7 @@ const App: FC = () => {
                     </Alert>
                 </Snackbar>
             </Container>
-      <span id="love">built with Love by <a href="https://www.hubra.app" target="_blank">
+      <span id="love">built with Love by <a href="https://www.hubra.app" target="_blank" rel="noreferrer">
         <span id="logo">Hubra</span>
 </a>
       </span>
