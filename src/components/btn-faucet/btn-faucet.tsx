@@ -1,8 +1,8 @@
 import  { FC, useEffect, useState } from 'react'
 import { keypairIdentity, Metaplex } from "@metaplex-foundation/js";
-import { BlockheightBasedTransactionConfirmationStrategy, Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionBlockhashCtor } from '@solana/web3.js';
+import { BlockheightBasedTransactionConfirmationStrategy, Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import { Box, Button, CircularProgress } from '@mui/material';
-import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getAssociatedTokenAddress, createInitializeAccountInstruction, getMinimumBalanceForRentExemptAccount, ACCOUNT_SIZE, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction } from '@solana/spl-token';
+import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction,  getMinimumBalanceForRentExemptMint } from '@solana/spl-token';
 
 
 import { track } from "@vercel/analytics/react"
